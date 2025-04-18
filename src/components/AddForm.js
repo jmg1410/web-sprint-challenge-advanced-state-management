@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setError, addSmurf } from '../actions';
 const AddForm = (props) => {
     const [state, setState] = useState({
         name:"",
@@ -8,8 +9,10 @@ const AddForm = (props) => {
         description:""
     });
 
+    const dispatch = useDispatch()
+
     //remove when error state is added
-    const errorMessage = "";
+    const errorMessage = useSelector((state) => state.error);
 
     const handleChange = e => {
         setState({
@@ -21,9 +24,16 @@ const AddForm = (props) => {
     const handleSubmit = e => {
         e.preventDefault();
         if (state.name === "" || state.position === "" || state.nickname === "") {
-            //dispatch a custom error action
+         dispatch(setError('Name, position, and nickname are required.'))   //dispatch a custom error action
         } else {
-            //dispatch an addSmurf action
+           dispatch(addSmurf(state))
+           dispatch(setError(''))
+           setState({
+            name:'',
+            position:'',
+            nickname: '',
+            description: ''
+           }) //dispatch an addSmurf action
         }
     }
 
